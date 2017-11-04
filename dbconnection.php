@@ -10,6 +10,7 @@ define('USERNAME', 'tp274');
 define('PASSWORD', 'trup@123');
 define('CONNECTION', 'sql1.njit.edu');
 
+#header('content-type: text/plain');
 class dbConnection{
 
     //variable to hold connection object.
@@ -20,7 +21,7 @@ class dbConnection{
 	// assign PDO object to db variable
          self::$db = new PDO( 'mysql:host=' . CONNECTION .';dbname=' . DATABASE, USERNAME, PASSWORD );
 	 self::$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	 echo "Connected successfully</br>";
+	 echo "Connected successfull. </br>";
 	     }
 	 catch (PDOException $e) {
 	//Output error - would normally log this to error file rather than output to user
@@ -48,7 +49,7 @@ class collection {
 	//This sets the table for the query to the name of the static class being used to run find all
 	$tableName = get_called_class();
 	//this is making the select query using the name of the table
-	$sql = 'SELECT * FROM ' . $tableName;  #. "where id &lt; 6";
+	$sql = 'SELECT * FROM ' . $tableName  . " where id < 6";
 	//this loads the query into the statement object that will run the query
 	$statement = $db->prepare($sql);
 	//this runs the query
@@ -66,33 +67,69 @@ class collection {
 
 class account {
 
-	private $id;
-	private $email;
-	private $fname;
-	private $lname;
-	private $phone;
-	private $birthday;
-	private $gender;
-	private $password;
+	public $id;
+	public $email;
+	public $fname;
+	public $lname;
+	public $phone;
+	public $birthday;
+	public $gender;
+	public $password;
 
 }
 
 class accounts extends collection {
     protected static $modelName = 'account';
 
-        public static function getRecordCount($records){
-   	echo "The number of records : " .sizeof($records)."</br>" ;
-
-	}
-
-	//To display the result in html table format
-	public static function displayRecords(){
-	}
     }
 
  
+class CommonUtils {
 
+	public static function getRecordCount($records){
+          echo "The number of records : " .sizeof($records)."</br>" ;
+        }
+
+        //To display the result in html table format	
+	public static function displayRecords($records){
+	  $html = '<html><body><table border = 1>';
+	  $html .= self :: tableHead($records);
+	  $html .= self :: tableBody($records);
+	  $html .= '</table></html>';
+	  echo $html;
+       }
+
+	public static function tableHead($records) {
+    	$html = '<thead>';
+    	foreach ( $records as $account) {
+          $html .= '<tr>';
+    	  foreach ( $account as $key => $value ) {
+	    $html .= '<th>' .  $key  . '</th>';
+    	  }
+          $html .= '</tr>';
+          break;
+        }
+        $html .= '</thead>';
+        return $html;
+    }
+
+
+	public static function tableBody($records) {
+    	  $html = '<tbody>';
+          foreach ( $records as $account) {
+	    $html .= '<tr>';
+	    foreach ( $account as $key => $value ) {
+	      $html .= '<td>' .  $value  . '</td>';
+	    }
+	    $html .= '</tr>';
+	  }
+	  $html .= '</tbody>';
+          return  $html;
+   }
+
+
+}
 $records = accounts::findAll();
 #print_r($records);
-accounts :: getRecordCount($records);
-
+CommonUtils :: getRecordCount($records);
+CommonUtils :: displayRecords($records);
