@@ -20,5 +20,6 @@ spl_autoload_register(array('Manage', 'autoload'));
 require('./phpconfig.php');
 
 $records = Accounts::findAll();
-CommonUtils :: getRecordCount($records);
-CommonUtils :: displayRecords($records);
+AccountRenderer :: getRecordCount($records);
+AccountRenderer :: displayRecords($records);
+
