@@ -8,7 +8,7 @@ class collection {
 	//This sets the table for the query to the name of the static class being used to run find all
 	$tableName = get_called_class();
 	//this is making the select query using the name of the table
-	$sql = 'SELECT * FROM ' . $tableName  . " where id < 6";
+	$sql = 'SELECT * FROM ' . $tableName;
 	//this loads the query into the statement object that will run the query
 	$statement = $db->prepare($sql);
 	//this runs the query
@@ -20,4 +20,5 @@ class collection {
 	//this loads the records into the record set and returns
 	return  $statement->fetchAll();
 	}
+
 } 
